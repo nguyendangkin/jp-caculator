@@ -13,7 +13,7 @@ function App() {
     const [shipmentInfo, setShipmentInfo] = useState({
         quantity: 26,
         purchasePrice: 4150000,
-        domesticShipping: 300000,
+        domesticShipping: 390000,
         internationalShipping: 1690000,
         deliveryFee: 130000,
     });
