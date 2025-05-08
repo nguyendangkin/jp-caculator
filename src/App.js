@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 function App() {
@@ -36,20 +36,65 @@ function App() {
     }, [pricePerUnit, shipmentInfo.quantity]);
 
     // Xử lý thay đổi giá tiền đơn vị
-    const handlePricePerUnitChange = (field, value) => {
+    const handlePricePerUnitChange = (field, value, event) => {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        const oldValue = input.value;
+        const newValue = value.replace(/[.,]/g, "");
+
+        // Lưu số lượng dấu chấm trước vị trí con trỏ
+        const dotsBeforeCursor = (
+            oldValue.slice(0, cursorPosition).match(/\./g) || []
+        ).length;
+
         setPricePerUnit({
             ...pricePerUnit,
-            [field]: Number(value.replace(/[.,]/g, "")),
+            [field]: Number(newValue),
         });
+
+        // Khôi phục vị trí con trỏ sau khi render
+        setTimeout(() => {
+            const formattedValue = formatNumber(Number(newValue));
+            const newDotsBeforeCursor = (
+                formattedValue.slice(0, cursorPosition).match(/\./g) || []
+            ).length;
+            const cursorOffset = newDotsBeforeCursor - dotsBeforeCursor;
+            input.setSelectionRange(
+                cursorPosition + cursorOffset,
+                cursorPosition + cursorOffset
+            );
+        }, 0);
     };
 
     // Xử lý thay đổi thông tin lô hàng
-    const handleShipmentChange = (field, value) => {
-        const newValue = Number(value.replace(/[.,]/g, ""));
+    const handleShipmentChange = (field, value, event) => {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        const oldValue = input.value;
+        const newValue = value.replace(/[.,]/g, "");
+
+        // Lưu số lượng dấu chấm trước vị trí con trỏ
+        const dotsBeforeCursor = (
+            oldValue.slice(0, cursorPosition).match(/\./g) || []
+        ).length;
+
         setShipmentInfo({
             ...shipmentInfo,
-            [field]: newValue,
+            [field]: Number(newValue),
         });
+
+        // Khôi phục vị trí con trỏ sau khi render
+        setTimeout(() => {
+            const formattedValue = formatNumber(Number(newValue));
+            const newDotsBeforeCursor = (
+                formattedValue.slice(0, cursorPosition).match(/\./g) || []
+            ).length;
+            const cursorOffset = newDotsBeforeCursor - dotsBeforeCursor;
+            input.setSelectionRange(
+                cursorPosition + cursorOffset,
+                cursorPosition + cursorOffset
+            );
+        }, 0);
     };
 
     // Format số thành dạng có dấu chấm
@@ -80,7 +125,11 @@ function App() {
                     <input
                         value={formatNumber(pricePerUnit.domestic)}
                         onChange={(e) =>
-                            handlePricePerUnitChange("domestic", e.target.value)
+                            handlePricePerUnitChange(
+                                "domestic",
+                                e.target.value,
+                                e
+                            )
                         }
                     />
                 </div>
@@ -94,7 +143,8 @@ function App() {
                         onChange={(e) =>
                             handlePricePerUnitChange(
                                 "international",
-                                e.target.value
+                                e.target.value,
+                                e
                             )
                         }
                     />
@@ -104,7 +154,11 @@ function App() {
                     <input
                         value={formatNumber(pricePerUnit.delivery)}
                         onChange={(e) =>
-                            handlePricePerUnitChange("delivery", e.target.value)
+                            handlePricePerUnitChange(
+                                "delivery",
+                                e.target.value,
+                                e
+                            )
                         }
                     />
                 </div>
@@ -127,7 +181,7 @@ function App() {
                     <input
                         value={formatNumber(shipmentInfo.quantity)}
                         onChange={(e) =>
-                            handleShipmentChange("quantity", e.target.value)
+                            handleShipmentChange("quantity", e.target.value, e)
                         }
                     />
                 </div>
@@ -138,7 +192,8 @@ function App() {
                         onChange={(e) =>
                             handleShipmentChange(
                                 "purchasePrice",
-                                e.target.value
+                                e.target.value,
+                                e
                             )
                         }
                     />
@@ -150,7 +205,8 @@ function App() {
                         onChange={(e) =>
                             handleShipmentChange(
                                 "domesticShipping",
-                                e.target.value
+                                e.target.value,
+                                e
                             )
                         }
                     />
@@ -164,7 +220,8 @@ function App() {
                         onChange={(e) =>
                             handleShipmentChange(
                                 "internationalShipping",
-                                e.target.value
+                                e.target.value,
+                                e
                             )
                         }
                     />
@@ -174,7 +231,11 @@ function App() {
                     <input
                         value={formatNumber(shipmentInfo.deliveryFee)}
                         onChange={(e) =>
-                            handleShipmentChange("deliveryFee", e.target.value)
+                            handleShipmentChange(
+                                "deliveryFee",
+                                e.target.value,
+                                e
+                            )
                         }
                     />
                 </div>
