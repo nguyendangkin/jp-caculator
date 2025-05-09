@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
+import Profit from "./Profit";
 
 function App() {
     // Giá tiền cho từng loại cước
     const [pricePerUnit, setPricePerUnit] = useState({
-        domestic: 15000,
-        international: 65000,
+        domestic: 11000,
+        international: 64000,
         delivery: 5000,
     });
 
@@ -13,8 +14,8 @@ function App() {
     const [shipmentInfo, setShipmentInfo] = useState({
         quantity: 26,
         purchasePrice: 4150000,
-        domesticShipping: 390000,
-        internationalShipping: 1690000,
+        domesticShipping: 286000,
+        internationalShipping: 1664000,
         deliveryFee: 130000,
     });
 
@@ -246,10 +247,12 @@ function App() {
                 <legend style={{ padding: "0 0.5rem" }}>Tổng cộng</legend>
 
                 <div>
-                    <label>Tổng hết khi về tay:</label>
-                    <input value={formatNumber(total)} readOnly />
+                    <label>Tổng tiền hết khi về tay:</label>
+                    <input value={formatNumber(total)} readOnly disabled />
                 </div>
             </fieldset>
+            {/* Profit */}
+            <Profit total={total} quantity={shipmentInfo.quantity} />
         </div>
     );
 }
